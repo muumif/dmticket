@@ -1,5 +1,5 @@
 mod commands;
-use poise::serenity_prelude::{self as serenity};
+use poise::{serenity_prelude::{self as serenity}};
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
 
@@ -19,29 +19,20 @@ async fn on_ready(
       let builder = poise::builtins::create_application_commands(&framework.options().commands);
 
       if environment == "development" {
-            let commands =
+            let _commands =
                   serenity::GuildId::set_application_commands(&PRIVATEGUILDID, &ctx.http, |commands| {
                   *commands = builder.clone();
       
                   commands
                   })
                   .await;
-            println!(
-                  "I now have the following guild slash commands: \n{:#?}",
-                  commands
-                  );
       } else {
-            let global_command1 =
+            let _global_command1 =
             serenity::Command::set_global_application_commands(&ctx.http, |commands| {
                 *commands = builder;
                 commands
             })
             .await;
-
-            println!(
-                  "I now have the following guild slash commands: \n{:#?}",
-                  global_command1
-              );
       }
   Ok(())
 }
@@ -50,13 +41,14 @@ async fn on_ready(
 #[allow(unused_doc_comments)]
 #[tokio::main]
 async fn main() {
-    // Build our client.
     let client = poise::Framework::builder()
         .token(DISCORD_TOKEN)
         .intents(serenity::GatewayIntents::empty())
         .options(poise::FrameworkOptions {
             commands: vec![
                 commands::ping::ping(),
+                commands::ticket::ticket(),
+                commands::setup::ticket_setup()
             ],
             ..Default::default()
         })
